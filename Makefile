@@ -13,10 +13,20 @@ TEST_EXECUTABLE = testa_velha
 all: $(TEST_EXECUTABLE)
 
 $(TEST_EXECUTABLE): $(TESTDIR)/$(TEST_EXECUTABLE).cpp $(SRCDIR)/velha.c $(SRCDIR)/velha.h
-    $(CXX) $(CXXFLAGS) $(INCFLAGS) -o $@ $< $(SRCDIR)/velha.c $(LIBFLAGS)
+	$(CXX) $(CXXFLAGS) $(INCFLAGS) -o $@ $< $(SRCDIR)/velha.c $(LIBFLAGS)
 
 clean:
-    rm -f $(TEST_EXECUTABLE)
+	rm -f $(TEST_EXECUTABLE)
 
 run: $(TEST_EXECUTABLE)
-    ./$(TEST_EXECUTABLE)
+	./$(TEST_EXECUTABLE)
+
+coverage: $(TEST_EXECUTABLE)
+	./$(TEST_EXECUTABLE)
+	gcov $(TEST_EXECUTABLE).cpp
+
+cppcheck:
+	cppcheck --enable=warning $(SRCDIR)/*.c $(TESTDIR)/*.cpp
+
+valgrind: $(TEST_EXECUTABLE)
+	valgrind --leak-check=full ./$(TEST_EXECUTABLE)
